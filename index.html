@@ -3,23 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>หนึ่งติดตามมือถือ</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <link rel="manifest" href="manifest.json">
-    <style>
-        body, html {
-            height: 100%;
-            margin: 0;
-        }
-        #map {
-            height: 100%;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
+    <title>Car Location Tracker</title>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 </head>
 <body>
-    <div id="map"></div>
-
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <h1>Car Location Tracker</h1>
+    <input type="text" id="deviceName" placeholder="Enter your device name" />
+    <button id="startTracking">Start Tracking</button>
+    <div id="map" style="height: 500px;"></div>
     <script src="app.js"></script>
 </body>
 </html>
