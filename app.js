@@ -1,28 +1,37 @@
-// ตรวจสอบว่า browser รองรับ Geolocation API หรือไม่
-if ('geolocation' in navigator) {
-    navigator.geolocation.getCurrentPosition(position => {
-        const { latitude, longitude } = position.coords;
+const map = L.map('map').setView([0, 0], 2); // กำหนดพิกัดเริ่มต้น
 
-        // สร้างแผนที่
-        var map = L.map('map').setView([latitude, longitude], 13);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+}).addTo(map);
 
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
+function sendLocation(deviceName) {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            const locationData = {
+                deviceName: deviceName,
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude
+            };
 
-        // เพิ่มตำแหน่งปัจจุบันของผู้ใช้บนแผนที่
-        var marker = L.marker([latitude, longitude]).addTo(map);
-        marker.bindPopup("You are here!").openPopup();
-    }, error => {
-        alert('Error: ' + error.message);
-    });
-} else {
-    alert('Geolocation is not supported by your browser.');
+            // แสดงตำแหน่งบนแผนที่
+            L.marker([locationData.latitude, locationData.longitude])
+                .addTo(map)
+                .bindPopup(locationData.deviceName)
+                .openPopup();
+            
+            console.log('Location sent:', locationData);
+        });
+    } else {
+        console.error('Geolocation is not supported by this browser.');
+    }
 }
 
-// Register the service worker
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('service-worker.js')
-    .then(() => console.log('Service Worker Registered'))
-    .catch(err => console.log('Service Worker registration failed: ', err));
-}
+// เริ่มการติดตามตำแหน่งเมื่อคลิกปุ่ม
+document.getElementById('startTracking').addEventListener('click', function() {
+    const deviceName = document.getElementById('deviceName').value;
+    if (deviceName) {
+        sendLocation(deviceName);
+    } else {
+        alert('Please enter a device name.');
+    }
+});
